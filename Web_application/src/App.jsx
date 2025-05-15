@@ -2,13 +2,14 @@ import { BrowserRouter } from 'react-router-dom'
 import './App.css'
 import Pages from './pages/Routes'
 import Footer from './components/footer'
+import Navbar from './components/navbar'
 
 function App() {
   
   return (
     <>
       <BrowserRouter>
-      <h1>Travel Recommendation</h1>
+      <Navbar/>
       <Pages/>
       <Footer/>
       </BrowserRouter>

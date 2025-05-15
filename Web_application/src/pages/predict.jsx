@@ -1,195 +1,258 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { FaMapMarkerAlt, FaStar } from 'react-icons/fa';
+import image from '../assets/travel_img.jpg'; // Adjust the path as necessary
 
-const Container = styled.div`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f0f4f8;
-`;
 
-const Box = styled.div`
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-`;
-
-const Title = styled.h1`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #1f2937;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const Label = styled.label`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-`;
-
-const Select = styled.select`
-  margin-top: 0.25rem;
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  outline: none;
-  &:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  &:hover {
-    background-color: #4338ca;
-  }
-`;
-
-const ResultContainer = styled.div`
-  margin-top: 1.5rem;
-  text-align: center;
-`;
-
-const ErrorContainer = styled.div`
-  margin-top: 1.5rem;
-  text-align: center;
-  color: #dc2626;
-`;
-
-const Predict= () => {
+export default function Predict() {
   const [formData, setFormData] = useState({
     budget_range: '',
     weather_preference: '',
     fantasy_type: '',
-    event_interest: '',
+    event_interest: ''
   });
 
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
+  const [results, setResults] = useState([]);
+  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = e => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setResult(null);
-    setError(null);
-
+    setError('');
     try {
-      const response = await fetch('/predict', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setResult(data.recommendations);
-      } else {
-        setError(data.error || 'An unexpected error occurred');
-      }
+      const response = await axios.post('http://localhost:5000/predict', formData);
+      setResults(response.data.recommendations);
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError(err.response?.data?.error || 'Something went wrong!');
     }
   };
 
   return (
     <Container>
-      <Box>
-        <Title>Travel Destination Recommender</Title>
-        <Form onSubmit={handleSubmit}>
-          <Label>
-            Budget Range
-            <Select name="budget_range" required onChange={handleChange}>
-              <option value="10000">Budget (Under $500)</option>
-              <option value="20000">Moderate ($500-$1500)</option>
-              <option value="30000">Luxury ($1500-$3000)</option>
-              <option value="40000">Ultra Luxury (Over $3000)</option>
-            </Select>
-          </Label>
+    <InputSection>
+      
+      <form onSubmit={handleSubmit}>
+        <Label>Budget Range</Label>
+        <Input
+          type="number"
+          name="budget_range"
+          value={formData.budget_range}
+          onChange={handleChange}
+          required
+        />
 
-          <Label>
-            Weather Preference
-            <Select name="weather_preference" required onChange={handleChange}>
-              <option value="Tropical">Tropical Paradise</option>
-              <option value="Snowy">Coolness</option>
-              <option value="Moderate">Moderate</option>
-            </Select>
-          </Label>
+        <Label>Weather Preference</Label>
+        <Select
+          name="weather_preference"
+          value={formData.weather_preference}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
+          <option value="Tropical">Tropical</option>
+          <option value="Snowy">Snowy</option>
+          <option value="Moderate">Moderate</option>
+           <option value="Mild Spring">Mild Spring</option>
+          <option value="Summers">Summers</option>
+          <option value="Rainy">Rainy</option>
+          <option value="Desert">Desert</option>
+          <option value="Winter">Winter</option>
+        </Select>
 
-          <Label>
-            Travel Style
-            <Select name="fantasy_type" required onChange={handleChange}>
-              <option value="Adventure">Adventure Seeker</option>
-              <option value="Cultural">Cultural Immersion</option>
-              <option value="Luxury">Luxury Relaxation</option>
-              <option value="Budget-friendly">Budget Friendly</option>
-              <option value="Cultural">Historical Journey</option>
-            </Select>
-          </Label>
+        <Label>Fantasy Type</Label>
+        <Select
+          name="fantasy_type"
+          value={formData.fantasy_type}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Luxury">Luxury</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Budget-friendly">Budget-friendly</option>
+          <option value="Romamctic-Getaway">Romamctic-Getaway</option>
+          <option value="Romantic">Romantic</option>
+          <option value="Island Retreat">Island Retreat</option>
+          <option value="Casinos">Casinos</option>
+          <option value="Wellness">Wellness</option>
+        </Select>
 
-          <Label>
-            Event Interest
-            <Select name="event_interest" required onChange={handleChange}>
-              <option value="Hiking">Hiking</option>
-              <option value="Camping">Camping</option>
-              <option value="Beaches">Beaches</option>
-              <option value="Skiing">Skiing</option>
-              <option value="Wildlife">Wildlife</option>
-              <option value="Spa">Spa</option>
-              <option value="History">Historical</option>
-              <option value="Travel">Travel</option>
-              <option value="Trip">Trip</option>
-            </Select>
-          </Label>
+        <Label>Event Interest</Label>
+        <Select
+          name="event_interest"
+          value={formData.event_interest}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
+          <option value="Hiking">Hiking</option>
+          <option value="Beaches">Beaches</option>
+          <option value="Festivals">Festivals</option>
+          <option value="Sking">Sking</option>
+          <option value="Museums">Museums</option>
+          <option value="Wildlife">Wildlife</option>
+          <option value="Camping">Camping</option>
+          <option value="History">History</option>
+          <option value="Spa">Spa</option>
+          <option value="Travel">Travel</option>
+          <option value="Trip">Trip</option>
+          <option value="Light Show">Light Show</option>
+          <option value="Cherry Blossom">Cherry Blossom</option>
+          <option value="Sunset View">Sunset View</option>
+          <option value="Private Villa">Private Villa</option>
+          <option value="Desert Safaro">Desert Safaro</option>
+          <option value="Gondala Ride">Gondala Ride</option>
+          <option value="Air Bolloon Ride">Air Bolloon Ride</option>
+          <option value="Norther Lights">Norther Lights</option>
+          <option value="Concert">Concert</option>
+          <option value="Nightlife">Nightlife</option>
+        </Select>
 
-          <Button type="submit">Find My Destination</Button>
-        </Form>
+        <Button type="submit">Get Recommendations</Button>
+      </form>
+      <img src={image} alt="Travel" style={{ width: '30%', height: 'auto', marginTop: '2rem' }} />
+    </InputSection>
+      
+    {error && <ResultBox style={{ color: 'red' }}>{error}</ResultBox>}
 
-        {result && (
-          <ResultContainer>
-            <h2>Recommended Destinations:</h2>
-            <ul>
-              {result.map((item, index) => (
-                <li key={index}><strong>{item.destination}</strong> - Confidence: {item.confidence}</li>
-              ))}
-            </ul>
-          </ResultContainer>
-        )}
-
-        {error && (
-          <ErrorContainer>
-            <p>{error}</p>
-          </ErrorContainer>
-        )}
-      </Box>
+      {results.length > 0 && (
+  <ResultContainer>
+    {results.map((item, idx) => (
+      <ResultCard key={idx}>
+        <DestinationTitle><FaMapMarkerAlt /> {item.destination}</DestinationTitle>
+        <ConfidenceScore><FaStar /> Confidence: {item.confidence}</ConfidenceScore>
+      </ResultCard>
+    ))}
+  </ResultContainer>
+)}
     </Container>
+    
   );
 };
 
-export default  Predict;
+const Container = styled.section`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Add padding inside the container */
+    width: 100%; /* Increased width */
+    img {
+        flex: 1;
+        max-width: 40%;
+        height: auto;
+        margin-right: 80px; /* Space between image and text */  
+    }
+  `
+const InputSection = styled.div`
+  display: flex;
+  
+  margin: 2rem auto;
+  padding: 1rem;
+ 
+  
+`;
+
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 1rem;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin: 1rem 0 0.5rem;
+  font-weight: 500;
+`;
+
+const Input = styled.input`
+  width: 50%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+`;
+
+const Select = styled.select`
+  width: 60vh;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+`;
+
+const Button = styled.button`
+  margin-top: 1.5rem;
+  width: 40%;
+  padding: 0.8rem;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const ResultBox = styled.div`
+  margin-top: 2rem;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+
+`;
+
+const ResultContainer = styled.div`
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 60%;
+`;
+
+const ResultCard = styled.div`
+  background: linear-gradient(to right, #f0f4f8, #e2ecf5);
+  border-left: 5px solid #007bff;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+const DestinationTitle = styled.h4`
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #333;
+  svg {
+    margin-right: 0.5rem;
+    color: #007bff;
+  }
+`;
+
+const ConfidenceScore = styled.p`
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 0.4rem;
+    color: gold;
+  }
+`;
+

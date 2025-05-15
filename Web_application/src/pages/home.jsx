@@ -1,13 +1,12 @@
 
+import Content from "../components/content";
 import Welcome from "../components/welcome";
 
 export default function Home() {
     return (
         <>
-        <Welcome/>
-        Input and predict section<br/>
-      
-        
+        <Welcome/><br/>
+        <Content/>
         </>
     )
 }
