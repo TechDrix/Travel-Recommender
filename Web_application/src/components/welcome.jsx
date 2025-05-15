@@ -1,12 +1,17 @@
 import image from '../assets/wlc_travel.jpg';
 import styled,{keyframes} from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function Welcome() {
+    const navigate = useNavigate();
+    const buttonHandler = () => {
+        navigate('/predict');
+    };
     return (
         <>
             <Container>
                  <p>We are here to help you find the best travel destinations based on your preferences.Explore our features and start planning your next adventure!
-                    <Button>Get Started</Button>
+                    <Button onClick={buttonHandler}>Get Started</Button>
                  </p>
                 <img src={image} alt="Welcome" style={{ width: '80%', height: 'auto' }} />
             </Container>
@@ -26,7 +31,7 @@ const Container = styled.div`
     width: 100%; /* Increased width */
     img {
         flex: 1;
-        max-width: 80%;
+        max-width: 50%;
         height: auto;
         margin-right: 20px; /* Space between image and text */
     }

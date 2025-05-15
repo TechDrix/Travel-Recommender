@@ -10,7 +10,7 @@ const animateBg = keyframes`
 
 // Styled Footer Container
 const FooterContainer = styled.footer`
- 
+  
   width: 100%;
   padding: 20px;
   text-align: center;
@@ -56,6 +56,8 @@ const SocialIcons = styled.div`
 const FooterText = styled.p`
   font-size: 1rem;
   margin: 5px 0;
+  justify-content: center;
+
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
@@ -66,16 +68,12 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <h3>About</h3>
-        <FooterText> A Travel Destination Recommender system based on the budget plan, fantasy types and weather condition of the places using machine learning can be a valuable application for people and traveller to find out the places suitable with there plan and budget</FooterText>
-        <h3>About</h3>
-        <FooterText> A Travel Destination Recommender system based on the budget plan, fantasy types and weather condition of the places using machine learning can be a valuable application for people and traveller to find out the places suitable with there plan and budget</FooterText>
-        <SocialIcons>
-            
-          <a href="#">🌐</a>
-          <a href="#">📘</a>
-          <a href="#">🐦</a>
-        </SocialIcons>
+        <FooterText> 
+          <h3>About</h3>
+          A Travel Destination Recommender system based on the budget plan, fantasy types and weather condition of the places using machine learning can be a valuable application for people and traveller to find out the places suitable with there plan and budget</FooterText>
+        <FooterText> 
+          <h3>Created by</h3>
+          Olivia Nangom</FooterText>
       </FooterContent>
     </FooterContainer>
   );
