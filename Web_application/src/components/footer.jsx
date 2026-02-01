@@ -73,10 +73,8 @@ const Footer = () => {
           A Travel Destination Recommender system based on the budget plan, fantasy types and weather condition of the places using machine learning can be a valuable application for people and traveller to find out the places suitable with there plan and budget</FooterText>
         <FooterText> 
           <h3>Created by</h3>
-          Olivia Nongthombam
-          , Roll no.234051019
-          <h3>Under Guidance of</h3>
-          Ankita Goyal, Assistant Professor</FooterText>
+          @TechDrix
+        </FooterText>
       </FooterContent>
     </FooterContainer>
   );
